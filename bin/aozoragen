@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8; -*-
+#
+# aozoragen: generating AOZORA format text files from scraping some ebook sites.
+#
+# Copyright (C) 2012 by TADA Tadashi <t@tdtds.jp>
+# Distributed under GPL
+#
+require 'uri'
+
+ARGV.each do |u|
+	uri = URI( u )
+	book = nil
+	case uri.host
+	when 'sai-zen-sen.jp'
+		require 'aozoragen/sai-zen-sen'
+		book = SaiZenSen::new( uri )
+	else
+		p "Error: unknown URI: #{uri}"
+	end
+	next unless book
+
+	meta = book.metainfo
+	open( "#{meta[:id]}.00.txt", 'w' ) do |w|
+		w.puts "#{meta[:title]}\n#{meta[:author].join ' / '}\n\n\n［＃改ページ］"
+	end
+
+	book.each_chapter do |chapter|
+		open( "#{meta[:id]}.#{chapter[:id]}.txt", 'w' ) do |w|
+			w.puts chapter[:text]
+		end
+	end
+end
