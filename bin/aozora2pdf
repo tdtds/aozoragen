@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8; -*-
+#
+# aozora2pdf: converting AOZORA format text to PDF using Aozora-Kindle servive.
+#             see: http://a2k.aill.org/
+#
+# sample usage:
+#    % aozora2pdf hoge*.txt > hoge.pdf
+#
+# Copyright (C) 2012 by TADA Tadashi <t@tdtds.jp>
+# Distributed under GPL
+#
+require 'uri'
+require 'net/http'
+require 'cgi'
+
+uri = URI( 'http://a2k.aill.org/download.cgi' )
+text = ARGF.read.force_encoding( 'UTF-8' )
+res = Net::HTTP.post_form( uri, 's' => 's', 'text' => text )
+print res.body
