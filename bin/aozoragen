@@ -15,6 +15,9 @@ ARGV.each do |u|
 	when 'sai-zen-sen.jp'
 		require 'aozoragen/sai-zen-sen'
 		book = SaiZenSen::new( uri )
+	when 'renzaburo.jp'
+		require 'aozoragen/renzaburo'
+		book = Renzaburo::new( uri )
 	else
 		p "Error: unknown URI: #{uri}"
 	end
