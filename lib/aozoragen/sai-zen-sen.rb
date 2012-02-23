@@ -27,20 +27,27 @@ class SaiZenSen
 			chapter = Nokogiri( open( uri, 'r:utf-8', &:read ) )
 			text = ''
 			(chapter / 'section.book-page-spread').each do |page|
-				page./( 'hgroup', 'div.pgroup' ).each do |section|
+				page.children.each do |section|
 					case section.name
 					when 'hgroup'
 						text << "\n　　　　　#{detag section}\n\n"
 					when 'div'
-						if section.attr( 'class' ) =~ /delimiter/
-							text << '　' * 5 << '─' * 10 << "\n"
-						else
-							section.children.each do |paragraph|
-								next unless paragraph.name == 'p'
+						case section.attr( 'class' )
+						when /delimiter/
+							text << '　' * 5 << '─' * 10 << "\n\n"
+						when /pgroup/
+							(section / 'p').each do |paragraph|
 								text << "　#{detag paragraph}\n"
 							end
+							text << "\n"
+						else
+							(section / 'div.pgroup').each do |div|
+								(div / 'p').each do |paragraph|
+									text << "　#{detag paragraph}\n"
+								end
+								text << "\n"
+							end
 						end
-						text << "\n"
 					end
 				end
 				text << "［＃改ページ］\n"
