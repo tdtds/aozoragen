@@ -48,5 +48,6 @@ class Renzaburo
 			end
 		end
 		text << "［＃改ページ］\n"
+		text.gsub( /＜/, '〈' ).gsub( /＞/, '〉' )
 	end
 end
