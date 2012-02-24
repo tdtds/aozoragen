@@ -16,5 +16,5 @@ require 'cgi'
 
 uri = URI( 'http://a2k.aill.org/download.cgi' )
 text = ARGF.read.force_encoding( 'UTF-8' )
-res = Net::HTTP.post_form( uri, 's' => 's', 'text' => text )
+res = Net::HTTP.post_form( uri, 's' => 'm', 'text' => text )
 print res.body
