@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Aozoragen::VERSION
   s.authors     = ["TADA Tadashi"]
   s.email       = ["t@tdtds.jp"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/tdtds/aozoragen"
   s.summary     = "Generating AOZORA format text of eBook novels via some Web sites."
   s.description = "Scraping some Ebook web site and generating AOZORA format text files."
 
