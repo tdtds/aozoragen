@@ -32,11 +32,11 @@ class SaiZenSen
 				page.children.each do |section|
 					case section.name
 					when 'hgroup'
-						text << "\n　　　　　#{detag section}\n\n"
+						text << "\n［＃小見出し］#{detag section}［＃小見出し終わり］\n\n"
 					when 'div'
 						case section.attr( 'class' )
 						when /delimiter/
-							text << '　' * 5 << '─' * 10 << "\n\n"
+							text << "［＃５字下げ］#{'─' * 10}\n\n"
 						when /pgroup/
 							(section / 'p').each do |paragraph|
 								text << "　#{detag paragraph}\n"

@@ -39,11 +39,11 @@ class Renzaburo
 		(Nokogiri( html ) / 'div#mainContent' ).each do |content|
 			(content / 'h3').each do |t|
 				title = t.text.sub( /^『#{book_title}』　/, '' )
-				text << "\n　　　　　#{title}\n\n"
+				text << "\n［＃小見出し］#{title}［＃小見出し終わり］\n\n"
 			end
 			(content / 'div.textBlock p' ).each do |para|
 				next if /＜次回につづく＞/ =~ para.text
-				text << '　' * 10 if (para.attr('class') || '').index( 'txtAlignC' )
+				text << '［＃１０字下げ］' if (para.attr('class') || '').index( 'txtAlignC' )
 				text << para.text.gsub( /<br>/, "\n" ) << "\n\n"
 			end
 		end
