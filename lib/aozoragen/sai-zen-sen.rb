@@ -89,40 +89,6 @@ class SaiZenSenRegular < SaiZenSen
 
 	def each_chapter
 		each_chapter_local( '#back-numbers li a' ){|c| yield c}
-		exit
-		(@index_html / '#back-numbers li a').each do |a|
-			uri = @index_uri + a.attr('href')
-			chapter = Nokogiri( open( uri, 'r:utf-8', &:read ) )
-			text = ''
-			(chapter / 'section.book-page-spread').each do |page|
-				page.children.each do |section|
-					case section.name
-					when 'hgroup'
-						text << "\n　　　　　#{detag section}\n\n"
-					when 'div'
-						case section.attr( 'class' )
-						when /delimiter/
-							text << '　' * 5 << '─' * 10 << "\n\n"
-						when /pgroup/
-							(section / 'p').each do |paragraph|
-								text << "　#{detag paragraph}\n"
-							end
-							text << "\n"
-						else
-							(section / 'div.pgroup').each do |div|
-								(div / 'p').each do |paragraph|
-									text << "　#{detag paragraph}\n"
-								end
-								text << "\n"
-							end
-						end
-					end
-				end
-				text << "［＃改ページ］\n"
-			end
-
-			yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
-		end
 	end
 end
 
@@ -143,40 +109,6 @@ class SaiZenSenFateZero < SaiZenSen
 
 	def each_chapter
 		each_chapter_local( 'article a' ){|c| yield c}
-		exit
-		(@index_html / 'article a').each do |a|
-			uri = @index_uri + a.attr('href')
-			chapter = Nokogiri( open( uri, 'r:utf-8', &:read ) )
-			text = ''
-			(chapter / 'section.book-page-spread').each do |page|
-				page.children.each do |section|
-					case section.name
-					when 'hgroup'
-						text << "\n　　　　　#{detag section}\n\n"
-					when 'div'
-						case section.attr( 'class' )
-						when /delimiter/
-							text << '　' * 5 << '─' * 10 << "\n\n"
-						when /pgroup/
-							(section / 'p').each do |paragraph|
-								text << "　#{detag paragraph}\n"
-							end
-							text << "\n"
-						else
-							(section / 'div.pgroup').each do |div|
-								(div / 'p').each do |paragraph|
-									text << "　#{detag paragraph}\n"
-								end
-								text << "\n"
-							end
-						end
-					end
-				end
-				text << "［＃改ページ］\n"
-			end
-
-			yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
-		end
 	end
 
 end
