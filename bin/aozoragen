@@ -7,6 +7,7 @@
 # Distributed under GPL
 #
 require 'uri'
+require 'pathname'
 
 ARGV.each do |u|
 	uri = URI( u )
@@ -18,6 +19,12 @@ ARGV.each do |u|
 	when 'renzaburo.jp'
 		require 'aozoragen/renzaburo'
 		book = Renzaburo::new( uri )
+	when 'github.com'
+		case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
+		when 'webmysteries'
+			require 'aozoragen/webmysteries'
+			book = Webmysteries::new( uri )
+		end
 	else
 		p "Error: unknown URI: #{uri}"
 	end

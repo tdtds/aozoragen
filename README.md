@@ -12,7 +12,7 @@ Gemを使ってインストールする:
 
     % aozoragen <URL>
 
-`URL`には日本語の小説をHTML形式で配布しているサイトの目次ページを指定する。カレントディレクトリに章ごとのテキストファイル(拡張子.txt)を生成する。ファイル名はサイトごとに自動的に決定され、`hoge.NN.txt` (NNは数値)のような形式となる。これらのファイルを連結すると一冊の本になる。
+`URL`には日本語の小説をHTML形式で配布しているサイトの目次ページを指定する。カレントディレクトリに章ごとのテキストファイル(拡張子.txt)を生成する。ファイル名はサイトごとに自動的に決定され、`hoge.NN.txt` (NNは連番数値またはその他の文字列)のような形式となる。これらのファイルを連結すると一冊の本になる。
 
 `aozoragen`コマンドが現在対応しているのは以下のサイト:
 
@@ -21,6 +21,11 @@ Gemを使ってインストールする:
  * 実行時に無償公開中の章のみが抽出される。
 * レンザブロー <http://renzaburo.jp/>
  * 指定例: http://renzaburo.jp/contents_t/061-katano/index.html
+* Webミステリーズ! <http://www.webmysteries.jp/>
+ * Webミステリーズ!の掲載作品には目次ページがないため、GitHubのWikiで代用する。
+ * h1要素に書名、h2要素に続くリストで著者名、h3要素に続くリストで連載各回のURLを表現する。
+ * WikiページのURLは、ファイル名が「webmisteries-」で始まるようにする。
+ * 指定例: https://github.com/tdtds/aozoragen/wiki/webmysteries-mm9_destruction
 
 ### aozora2pdf
 [青空キンドル](http://a2k.aill.org/)を使ってテキストをKindle向けPDFにする。パラメタにはaozoragenで生成した青空文庫形式のテキストファイルを順番通りに指定する。PDFは標準出力に出るので、リダイレクトする:
