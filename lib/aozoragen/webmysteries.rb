@@ -58,6 +58,11 @@ class Webmysteries
 				result << entry[0].gsub( %r|<.*?>|m, "" )
 			end
 		end
-		result.gsub( /^.*（つづく）.*$/, '［＃改ページ］' ).gsub( /(?<=.)（([あ-ん]+)）/, '《\1》' ).gsub( /\n{3,}/m, "\n\n" )
+		result.
+			gsub( /^.*（つづく）.*$/, '［＃改ページ］' ).
+			gsub( /(?<=.)（([あ-ん]+)）/, '《\1》' ).
+			gsub( /‐/, '─' ).
+			gsub( /\uFF0D/, '─' ).
+			gsub( /\n{3,}/m, "\n\n" )
 	end
 end
