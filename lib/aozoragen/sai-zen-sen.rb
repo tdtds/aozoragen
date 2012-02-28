@@ -8,8 +8,11 @@ require 'pathname'
 
 class SaiZenSen
 	def initialize( index_uri )
-		if index_uri.path == '/sa/fate-zero/works/'
+		case index_uri.path
+		when '/sa/fate-zero/works/'
 			@entity = SaiZenSenFateZero::new( index_uri )
+		when %r|/01.html$| # short story
+			@entity = SaiZenSenShort::new( index_uri )
 		else
 			@entity = SaiZenSenRegular::new( index_uri )
 		end
@@ -27,36 +30,40 @@ class SaiZenSen
 		(@index_html / selector).each do |a|
 			uri = @index_uri + a.attr('href')
 			chapter = Nokogiri( open( uri, 'r:utf-8', &:read ) )
-			text = ''
-			(chapter / 'section.book-page-spread').each do |page|
-				page.children.each do |section|
-					case section.name
-					when 'hgroup'
-						text << "\n［＃小見出し］#{detag section}［＃小見出し終わり］\n\n"
-					when 'div'
-						case section.attr( 'class' )
-						when /delimiter/
-							text << "［＃５字下げ］#{'─' * 10}\n\n"
-						when /pgroup/
-							(section / 'p').each do |paragraph|
+			text = get_chapter_text( chapter )
+			yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
+		end
+	end
+
+	def get_chapter_text( chapter )
+		text = ''
+		(chapter / 'section.book-page-spread').each do |page|
+			page.children.each do |section|
+				case section.name
+				when 'hgroup'
+					text << "\n［＃小見出し］#{detag section}［＃小見出し終わり］\n\n"
+				when 'div'
+					case section.attr( 'class' )
+					when /delimiter/
+						text << "［＃５字下げ］#{'─' * 10}\n\n"
+					when /pgroup/
+						(section / 'p').each do |paragraph|
+							text << "　#{detag paragraph}\n"
+						end
+						text << "\n"
+					else
+						(section / 'div.pgroup').each do |div|
+							(div / 'p').each do |paragraph|
 								text << "　#{detag paragraph}\n"
 							end
 							text << "\n"
-						else
-							(section / 'div.pgroup').each do |div|
-								(div / 'p').each do |paragraph|
-									text << "　#{detag paragraph}\n"
-								end
-								text << "\n"
-							end
 						end
 					end
 				end
-				text << "［＃改ページ］\n"
 			end
-
-			yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
+			text << "［＃改ページ］\n"
 		end
+		text
 	end
 
 	def detag( elem )
@@ -89,6 +96,27 @@ class SaiZenSenRegular < SaiZenSen
 
 	def each_chapter
 		each_chapter_local( '#back-numbers li a' ){|c| yield c}
+	end
+end
+
+class SaiZenSenShort < SaiZenSen
+	def initialize( index_uri )
+		@index_uri = index_uri
+		@index_html = Nokogiri( open( @index_uri, 'r:utf-8', &:read ) )
+	end
+
+	def metainfo
+		info = {:id => Pathname( @index_uri.path ).dirname.dirname.basename.to_s, :author => []}
+		info[:title] = (@index_html / 'h1.book-title')[0].text
+		(@index_html / 'h2.book-author strong').each do |author|
+			info[:author] << author.text
+		end
+		info
+	end
+
+	def each_chapter
+		text = get_chapter_text( @index_html )
+		yield( {id: Pathname( @index_uri.path ).basename( '.html' ).to_s, uri: @index_uri, text: text} )
 	end
 end
 
