@@ -44,7 +44,10 @@ module Aozoragen
 				page.children.each do |section|
 					case section.name
 					when 'hgroup'
-						text << "\n［＃小見出し］#{detag section}［＃小見出し終わり］\n\n"
+						text << detag( section ).split( /\n/ ).map{|x|
+							"\n［＃小見出し］#{x}［＃小見出し終わり］"
+						}.join
+						text << "\n"
 					when 'div'
 						case section.attr( 'class' )
 						when /delimiter/
@@ -78,7 +81,11 @@ module Aozoragen
 					rp.inner_html = '》'
 				end
 			end
-			elem.to_html.gsub( /<.*?>/, '' ).gsub( /\u6451/, '掴' ).strip
+			elem.to_html.
+				gsub( /<br>/, "\n" ).
+				gsub( /<.*?>/, '' ).
+				gsub( /\u6451/, '掴' ).
+				strip
 		end
 	end
 	
