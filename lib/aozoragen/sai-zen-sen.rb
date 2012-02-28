@@ -85,6 +85,7 @@ module Aozoragen
 				gsub( /<br>/, "\n" ).
 				gsub( /<.*?>/, '' ).
 				gsub( /\u6451/, '掴' ).
+				gsub( /\u5653/, '嘘' ).
 				strip
 		end
 	end
