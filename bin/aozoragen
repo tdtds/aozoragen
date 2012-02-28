@@ -15,15 +15,15 @@ ARGV.each do |u|
 	case uri.host
 	when 'sai-zen-sen.jp'
 		require 'aozoragen/sai-zen-sen'
-		book = SaiZenSen::new( uri )
+		book = Aozoragen::SaiZenSen::new( uri )
 	when 'renzaburo.jp'
 		require 'aozoragen/renzaburo'
-		book = Renzaburo::new( uri )
+		book = Aozoragen::Renzaburo::new( uri )
 	when 'github.com'
 		case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
 		when 'webmysteries'
 			require 'aozoragen/webmysteries'
-			book = Webmysteries::new( uri )
+			book = Aozoragen::Webmysteries::new( uri )
 		end
 	else
 		p "Error: unknown URI: #{uri}"
