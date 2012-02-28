@@ -30,6 +30,8 @@ module Aozoragen
 		def each_chapter_local( selector )
 			(@index_html / selector).each do |a|
 				uri = @index_uri + a.attr('href')
+				next if uri.path == '/entryguide.html' # skipping member only contents.
+
 				chapter = Nokogiri( open( uri, 'r:utf-8', &:read ) )
 				text = get_chapter_text( chapter )
 				yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
