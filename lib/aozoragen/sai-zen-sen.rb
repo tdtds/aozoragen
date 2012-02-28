@@ -68,7 +68,7 @@ class SaiZenSen
 				rp.inner_html = '》'
 			end
 		end
-		elem.to_html.gsub( /<.*?>/, '' ).strip
+		elem.to_html.gsub( /<.*?>/, '' ).gsub( /\u6451/, '掴' ).strip
 	end
 end
 
