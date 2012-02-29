@@ -36,7 +36,7 @@ class String
 	# normalize invalid charcters
 	#
 	def normalize_char
-		self.tr( "\u6451\u5653\u7e6b\uFF0D/", '掴嘘繋─' )
+		self.tr( "\u7626\u6451\u5653\u7e6b\uFF0D/", '痩掴嘘繋─' )
 	end
 end
 
