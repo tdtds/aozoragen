@@ -41,27 +41,28 @@ end
 
 ARGV.each do |u|
 	uri = URI( u )
-	book = nil
-	case uri.host
-	when 'sai-zen-sen.jp'
-		puts "sai-zen-sen: #{uri}" if opts[:verbose]
-		require 'aozoragen/sai-zen-sen'
-		book = Aozoragen::SaiZenSen::new( uri )
-	when 'renzaburo.jp'
-		puts "renzaburo: #{uri}" if opts[:verbose]
-		require 'aozoragen/renzaburo'
-		book = Aozoragen::Renzaburo::new( uri )
-	when 'github.com'
-		case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
-		when 'webmysteries'
-			puts "webmisteries: #{uri}" if opts[:verbose]
-			require 'aozoragen/webmysteries'
-			book = Aozoragen::Webmysteries::new( uri )
+	service = case uri.host
+		when 'sai-zen-sen.jp'
+			'sai-zen-sen'
+		when 'renzaburo.jp'
+			'renzaburo'
+		when 'github.com'
+			case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
+			when 'webmysteries'
+				'webmisteries'
+			else
+				nil
+			end
+		else
+			nil
 		end
-	else
+	unless service
 		puts "Skipping unknown URI: #{uri}"
+		next
 	end
-	next unless book
+
+	require "aozoragen/#{service}"
+	book = (Aozoragen.const_get service.split(/-/).map{|s| s.capitalize}.join)::new( uri )
 
 	meta = book.metainfo
 	write_open( "#{meta[:id]}.00.txt", opts ) do |w|
