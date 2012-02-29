@@ -6,37 +6,70 @@
 # Copyright (C) 2012 by TADA Tadashi <t@tdtds.jp>
 # Distributed under GPL
 #
+require 'optparse'
 require 'uri'
 require 'pathname'
+
+opts = {
+	overwrite: false,
+	output: '.',
+	verbose: false,
+}
+OptionParser.new do |o|
+	o.banner = 'Usage: aozoragen [options] <URI...>'
+	o.on( '-f', '--overwrite', 'force overwrite existent files.' ){|b| opts[:overwrite] = b}
+	o.on( '-O DIR', '--output DIR', 'specify output directory.' ){|dir| opts[:output] = dir}
+	o.on( '-v', '--verbose', 'show progress messages.' ){|b| opts[:verbose] = b}
+
+	begin
+		o.parse!
+	rescue OptionParser::InvalidOption
+		puts "invalid option\n\n#{o}"
+		exit -1
+	end
+end
+
+def write_open( file, opts )
+	name = "#{opts[:output]}/#{file}"
+	if !opts[:overwrite] && FileTest::exist?( name )
+		puts "Skipping write #{file}." if opts[:verbose]
+		return
+	end
+	open( name, 'w' ){|w| yield w}
+	puts name if opts[:verbose]
+end
 
 ARGV.each do |u|
 	uri = URI( u )
 	book = nil
 	case uri.host
 	when 'sai-zen-sen.jp'
+		puts "sai-zen-sen: #{uri}" if opts[:verbose]
 		require 'aozoragen/sai-zen-sen'
 		book = Aozoragen::SaiZenSen::new( uri )
 	when 'renzaburo.jp'
+		puts "renzaburo: #{uri}" if opts[:verbose]
 		require 'aozoragen/renzaburo'
 		book = Aozoragen::Renzaburo::new( uri )
 	when 'github.com'
 		case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
 		when 'webmysteries'
+			puts "webmisteries: #{uri}" if opts[:verbose]
 			require 'aozoragen/webmysteries'
 			book = Aozoragen::Webmysteries::new( uri )
 		end
 	else
-		p "Error: unknown URI: #{uri}"
+		puts "Skipping unknown URI: #{uri}"
 	end
 	next unless book
 
 	meta = book.metainfo
-	open( "#{meta[:id]}.00.txt", 'w' ) do |w|
+	write_open( "#{meta[:id]}.00.txt", opts ) do |w|
 		w.puts "#{meta[:title]}\n#{meta[:author].join ' / '}\n\n\n［＃改ページ］"
 	end
 
 	book.each_chapter do |chapter|
-		open( "#{meta[:id]}.#{chapter[:id]}.txt", 'w' ) do |w|
+		write_open( "#{meta[:id]}.#{chapter[:id]}.txt", opts ) do |w|
 			w.puts chapter[:text]
 		end
 	end
