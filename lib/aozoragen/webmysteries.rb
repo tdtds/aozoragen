@@ -2,13 +2,15 @@
 #
 # scraping webmysteries.jp
 #
-require 'nokogiri'
+require 'aozoragen/util'
 require 'open-uri'
 require 'pathname'
 require 'cgi'
 
 module Aozoragen
 	class Webmysteries
+		include Util
+
 		def initialize( index_uri )
 			@index_uri = URI( index_uri )
 			@index_html = Nokogiri( open( @index_uri, 'r:UTF-8', &:read ) )
@@ -62,9 +64,9 @@ module Aozoragen
 			result.
 				gsub( /^.*（つづく）.*$/, '［＃改ページ］' ).
 				gsub( /(?<=.)（([あ-ん]+)）/, '《\1》' ).
-				gsub( /‐/, '─' ).
-				gsub( /\uFF0D/, '─' ).
-				gsub( /\n{3,}/m, "\n\n" )
+				gsub( /\n{3,}/m, "\n\n" ).
+				for_tategaki.
+				normalize_char
 		end
 	end
 end

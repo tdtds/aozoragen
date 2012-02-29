@@ -2,12 +2,14 @@
 #
 # scraping renzaburo.jp
 #
-require 'nokogiri'
+require 'aozoragen/util'
 require 'open-uri'
 require 'pathname'
 
 module Aozoragen
 	class Renzaburo
+		include Util
+
 		def initialize( index_uri )
 			@index_uri = URI( index_uri.to_s.sub( /index\.html$/, '' ) )
 			@index_html = Nokogiri( open( @index_uri, 'r:CP932', &:read ) )
@@ -39,8 +41,7 @@ module Aozoragen
 			html = html.gsub( /\&mdash;/, "\u2500" ).gsub( /\&quot;/, "\u201D" )
 			(Nokogiri( html ) / 'div#mainContent' ).each do |content|
 				(content / 'h3').each do |t|
-					title = t.text.sub( /^『#{book_title}』　/, '' )
-					text << "\n［＃小見出し］#{title}［＃小見出し終わり］\n\n"
+					text << t.text.sub( /^『#{book_title}』　/, '' ).subhead
 				end
 				(content / 'div.textBlock p' ).each do |para|
 					next if /＜次回につづく＞/ =~ para.text
@@ -49,10 +50,7 @@ module Aozoragen
 				end
 			end
 			text << "［＃改ページ］\n"
-			text.gsub( /＜/, '〈' ).gsub( /＞/, '〉' ).tr(
-				'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-				'ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ０１２３４５６７８９'
-			)
+			text.for_tategaki
 		end
 	end
 end

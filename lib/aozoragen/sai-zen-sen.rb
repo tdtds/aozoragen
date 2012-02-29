@@ -2,12 +2,14 @@
 #
 # scraping sai-zen-sen.jp
 #
-require 'nokogiri'
+require 'aozoragen/util'
 require 'open-uri'
 require 'pathname'
 
 module Aozoragen
 	class SaiZenSen
+		include Util
+
 		def initialize( index_uri )
 			case index_uri.path
 			when '/sa/fate-zero/works/'
@@ -24,7 +26,10 @@ module Aozoragen
 		end
 	
 		def each_chapter
-			@entity.each_chapter{|c| yield c}
+			@entity.each_chapter do |c|
+				c[:text] = c[:text].normalize_char
+				yield c
+			end
 		end
 	
 		def each_chapter_local( selector )
@@ -44,10 +49,7 @@ module Aozoragen
 				page.children.each do |section|
 					case section.name
 					when 'hgroup'
-						text << detag( section ).split( /\n/ ).map{|x|
-							"\n［＃小見出し］#{x}［＃小見出し終わり］"
-						}.join
-						text << "\n"
+						text << detag( section ).subhead
 					when 'div'
 						case section.attr( 'class' )
 						when /delimiter/
@@ -70,23 +72,6 @@ module Aozoragen
 				text << "［＃改ページ］\n"
 			end
 			text
-		end
-	
-		def detag( elem )
-			(elem / 'ruby rp').each do |rp|
-				case rp.text
-				when '（'
-					rp.inner_html = '《'
-				when '）'
-					rp.inner_html = '》'
-				end
-			end
-			elem.to_html.
-				gsub( /<br>/, "\n" ).
-				gsub( /<.*?>/, '' ).
-				gsub( /\u6451/, '掴' ).
-				gsub( /\u5653/, '嘘' ).
-				strip
 		end
 	end
 	
