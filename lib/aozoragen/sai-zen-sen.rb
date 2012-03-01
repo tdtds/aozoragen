@@ -27,7 +27,7 @@ module Aozoragen
 	
 		def each_chapter
 			@entity.each_chapter do |c|
-				c[:text] = c[:text].normalize_char
+				c[:text] = c[:text].normalize_char.han2zen
 				yield c
 			end
 		end
