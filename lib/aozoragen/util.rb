@@ -53,12 +53,15 @@ module Aozoragen
 		#
 		def detag( elem )
 			# ruby tags
-			(elem / 'ruby rp').each do |rp|
-				case rp.text
-				when '（'
-					rp.inner_html = '《'
-				when '）'
-					rp.inner_html = '》'
+			(elem / 'ruby').each do |ruby|
+				ruby.inner_html = '｜' + ruby.inner_html
+				(ruby / 'rp').each do |rp|
+					case rp.text
+					when '（'
+						rp.inner_html = '《'
+					when '）'
+						rp.inner_html = '》'
+					end
 				end
 			end
 
