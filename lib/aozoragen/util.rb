@@ -20,7 +20,7 @@ class String
 	# replace characters fitting to vertical lyout
 	#
 	def for_tategaki
-		self.tr( '＜＞‐', '〈〉─' ).han2zen
+		self.tr( '＜＞−', '∧∨‐' ).han2zen
 	end
 
 	##
@@ -37,8 +37,8 @@ class String
 	#
 	def normalize_char
 		self.tr(
-			"\u5699\u9830\u525d\u7626\u6451\u5653\u7e6b\uFF0D/",
-			'噛頬剥痩掴嘘繋─'
+			"\u301d\u301f\u5699\u9830\u525d\u7626\u6451\u5653\u7e6b\uFF0D/",
+			"〃”噛頬剥痩掴嘘繋─"
 		)
 	end
 end
