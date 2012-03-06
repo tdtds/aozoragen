@@ -11,8 +11,6 @@ Gem::Specification.new do |s|
   s.summary     = "Generating AOZORA format text of eBook novels via some Web sites."
   s.description = "Scraping some Ebook web site and generating AOZORA format text files."
 
-  s.rubyforge_project = "aozoragen"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
