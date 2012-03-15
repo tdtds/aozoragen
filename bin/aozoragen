@@ -66,7 +66,7 @@ ARGV.each do |u|
 
 	meta = book.metainfo
 	write_open( "#{meta[:id]}.00.txt", opts ) do |w|
-		w.puts "#{meta[:title]}\n#{meta[:author].join ' / '}\n\n\n［＃改ページ］"
+		w.puts "#{meta[:title]}\n#{meta[:author].join '／'}\n\n\n［＃改ページ］"
 	end
 
 	book.each_chapter do |chapter|
