@@ -37,8 +37,8 @@ class String
 	#
 	def normalize_char
 		self.tr(
-			"\u301d\u301f\u5699\u9830\u525d\u7626\u6451\u5653\u7e6b\uFF0D\u6414\u541e\u881f\u555e\u9e7c",
-			"〃〃噛頬剥痩掴嘘繋─掻呑蝋唖鹸"
+			"\uff5e\u301d\u301f\u5699\u9830\u525d\u7626\u6451\u5653\u7e6b\uFF0D\u6414\u541e\u881f\u555e\u9e7c",
+			"〜〃〃噛頬剥痩掴嘘繋─掻呑蝋唖鹸"
 		)
 	end
 end
