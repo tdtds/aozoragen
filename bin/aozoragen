@@ -49,7 +49,7 @@ ARGV.each do |u|
 		when 'github.com'
 			case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
 			when 'webmysteries'
-				'webmisteries'
+				'webmysteries'
 			else
 				nil
 			end
