@@ -24,7 +24,7 @@ Gemを使ってインストールする:
 * Webミステリーズ! <http://www.webmysteries.jp/>
  * Webミステリーズ!の掲載作品には目次ページがないため、GitHubのWikiで代用する。
  * h1要素に書名、h2要素に続くリストで著者名、h3要素に続くリストで連載各回のURLを表現する。
- * WikiページのURLは、ファイル名が「webmisteries-」で始まるようにする。
+ * WikiページのURLは、ファイル名が「webmysteries-」で始まるようにする。
  * 指定例: https://github.com/tdtds/aozoragen/wiki/webmysteries-mm9_destruction
 
 ### aozora2pdf
