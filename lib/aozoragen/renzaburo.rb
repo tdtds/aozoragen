@@ -30,7 +30,7 @@ module Aozoragen
 			book_title = metainfo[:title]
 			(@index_html / 'ul.btnList li.withDate a' ).each do |a|
 				uri = @index_uri + a.attr( :href )
-				text = get_content( uri, book_title )
+				text = get_content( uri, book_title ).normalize_char
 				yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
 			end
 		end
