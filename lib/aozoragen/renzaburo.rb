@@ -30,16 +30,33 @@ module Aozoragen
 			book_title = metainfo[:title]
 			(@index_html / 'ul.btnList li.withDate a' ).each do |a|
 				uri = @index_uri + a.attr( :href )
-				text = get_content( uri, book_title ).normalize_char
-				yield( {id: Pathname( uri.path ).dirname.basename.to_s, uri: uri, text: text} )
+				get_content( uri, book_title ) do |u, t|
+					text = t.normalize_char
+					chap_id = "#{Pathname( u.path ).dirname.basename}-#{Pathname(u.path).basename('.html')}"
+					yield( {id: chap_id, uri: u, text: text} )
+				end
 			end
 		end
 	
 		def get_content( uri, book_title = '' )
+			text, html = get_page_content( uri, book_title )
+			yield uri, text
+
+			[].tap{|urls|
+				(html / 'ul.pageLink li a').each{|a| urls << (uri + a.attr( 'href' )) }
+			}.sort.uniq.each do |uri|
+				text, html = get_page_content( uri, book_title )
+				yield uri, text
+			end
+		end
+
+	private
+		def get_page_content( uri, book_title )
 			text = ''
 			html = open( uri, 'r:CP932', &:read ).encode( 'UTF-8' )
 			html = html.gsub( /\&mdash;/, "\u2500" ).gsub( /\&quot;/, "\u201D" )
-			(Nokogiri( html ) / 'div#mainContent' ).each do |content|
+			dom = Nokogiri( html )
+			(dom / 'div#mainContent' ).each do |content|
 				(content / 'h3').each do |t|
 					text << t.text.sub( /^『#{book_title}』　/, '' ).subhead
 				end
@@ -50,7 +67,7 @@ module Aozoragen
 				end
 			end
 			text << "［＃改ページ］\n"
-			text.for_tategaki
+			return [text.for_tategaki, dom]
 		end
 	end
 end
