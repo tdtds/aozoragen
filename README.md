@@ -21,6 +21,8 @@ Gemを使ってインストールする:
  * 実行時に無償公開中の章のみが抽出される。
 * レンザブロー <http://renzaburo.jp/>
  * 指定例: http://renzaburo.jp/contents_t/061-katano/index.html
+* 小説を読もう! <http://yomou.syosetu.com/>
+ * 指定例: http://ncode.syosetu.com/n8725k/
 * Webミステリーズ! <http://www.webmysteries.jp/>
  * Webミステリーズ!の掲載作品には目次ページがないため、GitHubのWikiで代用する。
  * h1要素に書名、h2要素に続くリストで著者名、h3要素に続くリストで連載各回のURLを表現する。

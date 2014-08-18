@@ -46,6 +46,8 @@ ARGV.each do |u|
 			'sai-zen-sen'
 		when 'renzaburo.jp'
 			'renzaburo'
+		when 'ncode.syosetu.com'
+			'syosetu'
 		when 'github.com'
 			case Pathname( uri.path ).basename.to_s.sub( %r|(.*?)-.*$|, '\1' )
 			when 'webmysteries'
