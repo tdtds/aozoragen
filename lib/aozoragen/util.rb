@@ -20,7 +20,7 @@ class String
 	# replace characters fitting to vertical lyout
 	#
 	def for_tategaki
-		self.tr( '＜＞−', '∧∨‐' ).han2zen
+		self.tr( '＜＞－“”−', '∧∨―〃〃‐' ).han2zen
 	end
 
 	##
