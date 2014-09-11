@@ -26,7 +26,7 @@ module Aozoragen
 			(@index_html / '.subtitle a').each do |a|
 				uri = @index_uri + a.attr('href')
 
-				chapter = Nokogiri(open(uri, 'r:utf-8', &:read))
+				chapter = Nokogiri(open(uri, 'r:utf-8', &:read).tr('《》', '〈〉'))
 				text = get_chapter_text(chapter)
 				chapter_id = '%03d' % Pathname(uri.path).basename.to_s.to_i
 				yield({id: chapter_id, uri: uri, text: text})
