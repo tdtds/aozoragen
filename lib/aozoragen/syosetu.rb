@@ -37,7 +37,7 @@ module Aozoragen
 			text = ''
 			text << (chapter / '.novel_subtitle')[0].text.subhead
 			(chapter / '#novel_honbun').each do |page|
-				text << detag(page).gsub(/\n\n/, "\n").gsub(/^　◆$/, '［＃１０字下げ］◆')
+				text << detag(page).gsub(/\n{2,3}/, "\n").gsub(/^　◆$/, '［＃１０字下げ］◆')
 				text << "［＃改ページ］\n"
 			end
 			text.han2zen.for_tategaki
