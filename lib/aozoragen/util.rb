@@ -57,9 +57,9 @@ module Aozoragen
 				ruby.inner_html = '｜' + ruby.inner_html
 				(ruby / 'rp').each do |rp|
 					case rp.text
-					when /[（\(]/
+					when /[（〈《\(]/
 						rp.inner_html = '《'
-					when /[）\)]/
+					when /[）〉》\)]/
 						rp.inner_html = '》'
 					end
 				end
