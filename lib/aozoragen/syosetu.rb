@@ -29,7 +29,8 @@ module Aozoragen
 		end
 	
 		def each_chapter
-			(@index_html / '.subtitle a').each do |a|
+			(@index_html / '.subtitle a').each_with_index do |a, idx|
+				sleep 5 unless idx == 0 # sleep 5 secs against access deny by host
 				uri = @index_uri + a.attr('href')
 
 				chapter = Nokogiri(open(uri, 'r:utf-8', &:read).tr('《》．|', '『』・｜'))
